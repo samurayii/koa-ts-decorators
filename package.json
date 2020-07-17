@@ -1,7 +1,7 @@
 {
-    "name": "template",
+    "name": "koa-ts-decorators",
     "version": "0.0.1",
-    "description": "Template for nodejs module with typescript",
+    "description": "Decorators for koa",
     "main": "index.js",
     "scripts": {
         "ncu": "ncu",
@@ -13,19 +13,19 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/samurayii/template-project-ts-module.git"
+        "url": "git+https://github.com/samurayii/koa-ts-decorators.git"
     },
     "keywords": [
-        "templates",
+        "koa",
         "typescript",
-        "module"
+        "decorator"
     ],
     "author": "Nuzhnov A.A.",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/samurayii/template-project-ts-module/issues"
+        "url": "https://github.com/samurayii/koa-ts-decorators/issues"
     },
-    "homepage": "https://github.com/samurayii/template-project-ts-module.git#readme",
+    "homepage": "https://github.com/samurayii/koa-ts-decorators.git#readme",
     "devDependencies": {
         "@types/chalk": "^2.2.0",
         "@types/find-package-json": "^1.1.1",
