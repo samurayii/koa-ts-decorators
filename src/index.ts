@@ -5,7 +5,7 @@ import { Server, createServer } from "http";
 import { Linker } from "./lib/linker";
 
 export * from "./decorators/get";
-
+export * from "./decorators/controller";
 
 export interface IKoaDConfig {
     keys?: string[]

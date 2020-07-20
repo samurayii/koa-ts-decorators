@@ -22,13 +22,7 @@ const createRoutes = (app: KoaD) => {
             full_prefix += `/${controller_path}`;
         }
 
-        if (full_prefix === "") {
-            full_prefix = "/";
-        }
-
-        const router = new Router({
-            prefix: full_prefix
-        });
+        const router = new Router();
 
         for (const method in controller.methods) {
 
@@ -36,8 +30,9 @@ const createRoutes = (app: KoaD) => {
 
                 const controller_method = controller.methods[method][request_path].fn_name;
                 const instance = controller.instance;
-
-                router.get(request_path, instance[controller_method].bind(instance));
+console.log(`${full_prefix}${request_path}`);
+                //router.get(request_path, instance[controller_method].bind(instance));
+                router.get(`${full_prefix}${request_path}`, instance[controller_method].bind(instance));
 
             }
 

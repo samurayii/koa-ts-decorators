@@ -45,6 +45,6 @@ export function getRequestPath (request_path: string) {
 
     request_path = `/${request_path}`;
 
-    return request_path;
+    return request_path.toLocaleLowerCase();
 
 }

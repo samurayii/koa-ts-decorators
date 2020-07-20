@@ -1,4 +1,5 @@
-import KoaD, { Get } from "../src/index";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import KoaD, { Get, Controller } from "../src/index";
 import * as Koa from "koa";
 import * as superagent from "superagent";
 import { expect } from "chai";
@@ -13,7 +14,7 @@ describe("KoaD", function () {
         const config = {
             listening: "*:3001",
             enable: true,
-            prefix: "/api",
+            prefix: "/",
             proxy: false,
             subdomain_offset: 2,
             proxy_header: "X-Forwarded-For",
@@ -29,11 +30,12 @@ describe("KoaD", function () {
             }   
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        
+        @Controller("/")
         class Healthcheck {
 
             @Get()
-            @Get("/2")
+            @Get("/hello")
             get (ctx: Koa.Context): void {
                 ctx.body = "OK";
                 ctx.status = 200;
@@ -44,12 +46,12 @@ describe("KoaD", function () {
 
         app.listen(config.listening, async () => {
 
-            const response1 = await superagent.get("http://localhost:3001/api/healthcheck");
+            const response1 = await superagent.get("http://localhost:3001/");
 
             expect(response1.status).to.equal(200);
             expect(response1.text).to.equal("OK");
 
-            const response2 = await superagent.get("http://localhost:3001/api/healthcheck/2");
+            const response2 = await superagent.get("http://localhost:3001/hello");
 
             expect(response2.status).to.equal(200);
             expect(response2.text).to.equal("OK");
