@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import { getRequestPath } from "../lib/utils";
-import catalog from "../lib/catalog";
+import AppCatalog from "../lib/app-catalog";
 
-export function Controller (request_path: string = "", id: string = "default"): Function {
-    
-    if (typeof request_path !== "string") {
-        throw new Error("Request path must be string");
+export function Controller (request_path: string = "", app_id: string = "default"): Function {
+
+    if (typeof app_id !== "string") {
+        throw new Error("Id application must be string");
     }
 
     return function (target: Function) {
@@ -16,24 +16,11 @@ export function Controller (request_path: string = "", id: string = "default"): 
         }
 
         request_path = getRequestPath(request_path);
-    
+  
         const controller_name = target.name;
-        const constructor = target as FunctionConstructor;
+        const controllers_catalog = AppCatalog.getCatalog(app_id).controllers;
 
-        if (catalog[id] === undefined) {
-            catalog[id] = {};
-        }
+        controllers_catalog.add(controller_name, request_path, target);
 
-        if (catalog[id][controller_name] === undefined) {
-            catalog[id][controller_name] = {
-                name: controller_name,
-                path: target.name.toLocaleLowerCase(),
-                instance: new constructor(),
-                methods: {}
-            };
-        } else {
-            catalog[id][controller_name].path = request_path;
-        }
-console.log(JSON.stringify(catalog, null, 4));
     };
 }

@@ -1,55 +1,85 @@
-import catalog from "./catalog";
 import KoaD from "../index";
 import * as Router from "@koa/router";
+import AppCatalog from "./app-catalog";
 
-const createRoutes = (app: KoaD) => {
+export default function Linking (app: KoaD): void {
 
-    const schema = catalog[app.id];
+    const app_id = app.id;
+   
+    if (AppCatalog.existCatalog(app_id) !== true) {
+        throw new Error(`Koa decorators error. Catalog for application ${app_id} not found`);
+    }
 
-    for (const controller_name in schema) {
+    const catalog = AppCatalog.getCatalog(app_id);
+    const routes = catalog.routes;
+    const controllers = catalog.controllers;
+    const services = catalog.services;
+    const prefix = app.prefix.replace(/(^\/|\/$)/gi, "");
 
-        const controller = schema[controller_name];
-        const prefix = app.prefix.replace(/(^\/|\/$)/gi, "");
-        const controller_path = controller.path.replace(/(^\/|\/$)/gi, "");
-        
+    for (const controller of controllers.catalog) {
+
         let full_prefix = "";
 
         if (prefix !== "") {
             full_prefix += `/${prefix}`;
         }
 
-        if (controller_path !== "") {
-            full_prefix += `/${controller_path}`;
+        if (controller.path !== "/" && controller.path !== "") {
+            full_prefix += `/${controller.path.replace(/(^\/|\/$)/gi, "")}`;
         }
-
+        
         const router = new Router();
 
-        for (const method in controller.methods) {
+        if (full_prefix !== "/" && full_prefix !== "") {
+            router.prefix(full_prefix);
+        }
 
-            for (const request_path in controller.methods[method]) {
+        for (const service of services.catalog) {
 
-                const controller_method = controller.methods[method][request_path].fn_name;
-                const instance = controller.instance;
-console.log(`${full_prefix}${request_path}`);
-                //router.get(request_path, instance[controller_method].bind(instance));
-                router.get(`${full_prefix}${request_path}`, instance[controller_method].bind(instance));
+            if (controller.name === service.controller_name) {
+                router.use(service.instance);
+            }
+
+        }
+
+        for (const route of routes.catalog) {
+
+            if (controller.name === route.controller_name) {
+
+                switch (route.method) {
+                    case "get": {
+                        router.get(route.path, controller.instance[route.fn_name].bind(controller.instance));
+                        break;
+                    }
+                    case "post": {
+                        router.post(route.path, controller.instance[route.fn_name].bind(controller.instance));
+                        break;
+                    }
+                    case "del": {
+                        router.del(route.path, controller.instance[route.fn_name].bind(controller.instance));
+                        break;
+                    }
+                    case "put": {
+                        router.put(route.path, controller.instance[route.fn_name].bind(controller.instance));
+                        break;
+                    }
+                    case "use": {
+                        router.use(controller.instance[route.fn_name].bind(controller.instance));
+                        break;
+                    }
+                    default: {
+                        throw new Error(`Koa decorators error. Method ${route.method} for controller ${controller.name} not found`);
+                    }
+                }
 
             }
 
-            app.use(router.routes()).use(router.allowedMethods());
+        }
 
-        } 
+        app.use(router.routes()).use(router.allowedMethods());
 
     }
 
-};
-
-export function Linker (app: KoaD): void {
-
-    if (catalog[app.id] === undefined) {
-        throw new Error(`Controllers for application ${app.id} not found`);
-    }
-
-    createRoutes(app);
+    AppCatalog.reset(app_id);
 
 }

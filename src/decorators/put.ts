@@ -3,7 +3,7 @@
 import { getRequestPath } from "../lib/utils";
 import AppCatalog from "../lib/app-catalog";
 
-export function Get (request_path: string = "/", app_id: string = "default"): Function {
+export function Put (request_path: string = "/", app_id: string = "default"): Function {
 
     if (typeof app_id !== "string") {
         throw new Error("Id application must be string");
@@ -16,7 +16,7 @@ export function Get (request_path: string = "/", app_id: string = "default"): Fu
         const controller_name = target.constructor.name;
         const routes_catalog = AppCatalog.getCatalog(app_id).routes;
 
-        routes_catalog.add(request_path, "get", controller_name, controller_method);
+        routes_catalog.add(request_path, "put", controller_name, controller_method);
 
     };
 

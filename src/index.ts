@@ -2,9 +2,14 @@
 import * as Koa from "koa";
 import { ListenOptions } from "net";
 import { Server, createServer } from "http";
-import { Linker } from "./lib/linker";
+import Linking from "./lib/linker";
 
 export * from "./decorators/get";
+export * from "./decorators/post";
+export * from "./decorators/put";
+export * from "./decorators/delete";
+export * from "./decorators/middleware";
+export * from "./decorators/service";
 export * from "./decorators/controller";
 
 export interface IKoaDConfig {
@@ -59,6 +64,7 @@ export default class KoaD extends Koa implements IKoaD {
 
     private readonly _config: IKoaDConfig
     private _server: Server
+    private _linked_flag: boolean
 
     constructor (
         config?: IKoaDConfig,
@@ -66,6 +72,8 @@ export default class KoaD extends Koa implements IKoaD {
     ) {
         
         super();
+
+        this._linked_flag = false;
 
         this._config = {
             env: "development",
@@ -110,7 +118,12 @@ export default class KoaD extends Koa implements IKoaD {
             return this._server;
         } else {
 
-            Linker(this);
+            if (this._linked_flag === false) {
+                Linking(this);
+                this._linked_flag = true;
+            }
+
+            
 
             const reg = /([a-zA-Z]{1}[-a-zA-Z0-9.]{0,255}|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|\*)\:([0-9]{1,5})/;
 
