@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import KoaD, { Get, Controller, Middleware, Post, Service } from "../src/index";
+import KoaD, { Get, Controller, Middleware, Post, Service, Context, Next } from "../src/index";
 import * as Koa from "koa";
 import * as superagent from "superagent";
 import { expect } from "chai";
@@ -36,7 +36,7 @@ describe("KoaD", function () {
         class Healthcheck {
 
             @Middleware()
-            middle (ctx: Koa.Context, next: Koa.Next) {
+            middle (ctx: Context, next: Next) {
                 ctx.state.flag = true;
                 next();
             }
@@ -45,7 +45,7 @@ describe("KoaD", function () {
             @Get("/hello")
             @Post()
             @Post("/hello")
-            get (ctx: Koa.Context): void {
+            get (ctx: Context): void {
                 if (ctx.state.flag === true) {
                     ctx.body = "OK";
                     ctx.status = 200;
@@ -117,7 +117,7 @@ describe("KoaD", function () {
         class Healthcheck {
 
             @Middleware()
-            middle (ctx: Koa.Context, next: Koa.Next) {
+            middle (ctx: Context, next: Next) {
                 ctx.state.flag = true;
                 next();
             }
@@ -126,7 +126,7 @@ describe("KoaD", function () {
             @Get("/hello")
             @Post()
             @Post("/hello")
-            get (ctx: Koa.Context): void {
+            get (ctx: Context): void {
                 if (ctx.state.flag === true) {
                     ctx.body = "OK";
                     ctx.status = 200;
@@ -218,7 +218,7 @@ describe("KoaD", function () {
         class Healthcheck {
 
             @Middleware()
-            middle (ctx: Koa.Context, next: Koa.Next) {
+            middle (ctx: Context, next: Next) {
                 ctx.state.flag = true;
                 next();
             }
@@ -227,7 +227,7 @@ describe("KoaD", function () {
             @Get("/hello")
             @Post()
             @Post("/hello")
-            get (ctx: Koa.Context): void {
+            get (ctx: Context): void {
                 if (ctx.state.flag === true) {
                     ctx.body = "OK";
                     ctx.status = 200;
@@ -243,14 +243,14 @@ describe("KoaD", function () {
         class User {
 
             @Middleware()
-            middle (ctx: Koa.Context, next: Koa.Next) {
+            middle (ctx: Context, next: Next) {
                 ctx.state.flag = true;
                 next();
             }
 
             @Get()
             @Post()
-            get (ctx: Koa.Context): void {
+            get (ctx: Context): void {
                 if (ctx.state.flag === true) {
                     ctx.body = "OK";
                     ctx.status = 200;

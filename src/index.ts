@@ -12,6 +12,8 @@ export * from "./decorators/middleware";
 export * from "./decorators/service";
 export * from "./decorators/controller";
 
+export { Context, Next } from "koa";
+
 export interface IKoaDConfig {
     keys?: string[]
     env?: string
@@ -165,4 +167,5 @@ export default class KoaD extends Koa implements IKoaD {
     close (callback?: (err?: Error) => void): Server {
         return this._server.close(callback);
     }
+
 }
