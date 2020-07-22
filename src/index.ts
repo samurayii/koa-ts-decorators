@@ -10,6 +10,3 @@ export * from "./interfaces/middleware";
 export * from "./lib/koad";
 
 export { Context, Next, Request, Response } from "koa";
-
-
-
