@@ -1,5 +1,6 @@
+/* eslint-disable prefer-rest-params */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import KoaD, { Get, Controller, Middleware, Post, Context, Next, IMiddleware, IKoaDConfig } from "../src/index";
+import { KoaD, Get, Controller, Middleware, Post, Context, Next, IMiddleware, IKoaDConfig } from "../src/index";
 import * as superagent from "superagent";
 import { expect } from "chai";
 import * as helmet from "koa-helmet";
@@ -58,7 +59,7 @@ describe("KoaD", function () {
 
         const app = new KoaD(config);
 
-        app.listen(config.listening, async () => {
+        app.listen( async () => {
 
             const response1 = await superagent.get("http://localhost:3001/");
 
@@ -139,7 +140,7 @@ describe("KoaD", function () {
 
         const app = new KoaD(config);
 
-        app.listen(config.listening, async () => {
+        app.listen( async () => {
 
             const response1 = await superagent.get("http://localhost:3001/api/");
 
@@ -262,7 +263,7 @@ describe("KoaD", function () {
 
         const app = new KoaD(config);
 
-        app.listen(config.listening, async () => {
+        app.listen( async () => {
 
             const response1 = await superagent.get("http://localhost:3001/");
 
@@ -354,7 +355,7 @@ describe("KoaD", function () {
 
         const app = new KoaD(config);
 
-        app.listen(config.listening, async () => {
+        app.listen( async () => {
 
             const response1 = await superagent.get("http://localhost:3001/healthcheck");
 
@@ -363,6 +364,101 @@ describe("KoaD", function () {
 
             app.close( () => {
                 done();
+            });
+
+        });
+
+    });
+
+    it("2 applications", function(done) {
+
+        this.timeout(5000);
+        this.slow(5000);
+
+        const config = {
+            enable: true,
+            prefix: "/",
+            proxy: false,
+            subdomain_offset: 2,
+            proxy_header: "X-Forwarded-For",
+            ips_count: 0,
+            parsing: {
+                enable: false,
+                types: ["json"],
+                encoding: "utf-8",
+                form_limit: "56kb",
+                json_limit: "1mb",
+                text_limit: "1mb",
+                strict: true
+            }   
+        };
+
+        @Controller()
+        @Controller("/")
+        @Controller({
+            app_id: "second"
+        })
+        @Controller("/", "second")
+        class Healthcheck {
+
+            @Middleware()
+            @Middleware("second")
+            middle (ctx: Context, next: Next) {
+                ctx.state.flag = true;
+                next();
+            }
+
+            @Get()
+            @Get("/hello")
+            @Get({
+                app_id: "second"
+            })
+            @Get("/hello", "second")
+            get (ctx: Context): void {
+                if (ctx.state.flag === true) {
+                    ctx.body = "OK";
+                    ctx.status = 200;
+                } else {
+                    ctx.body = "Error";
+                    ctx.status = 500;
+                }
+            }
+        }
+
+        const app1 = new KoaD(config);
+        const app2 = new KoaD(config, "second");
+
+        app1.listen("*:3001", async () => {
+
+            app2.listen("*:3002", async () => {
+
+                const response1_1 = await superagent.get("http://localhost:3001/");
+
+                expect(response1_1.status).to.equal(200);
+                expect(response1_1.text).to.equal("OK");
+    
+                const response1_2 = await superagent.get("http://localhost:3001/hello");
+    
+                expect(response1_2.status).to.equal(200);
+                expect(response1_2.text).to.equal("OK");
+
+                const response2_1 = await superagent.get("http://localhost:3002/");
+
+                expect(response2_1.status).to.equal(200);
+                expect(response2_1.text).to.equal("OK");
+    
+                const response2_2 = await superagent.get("http://localhost:3002/hello");
+    
+                expect(response2_2.status).to.equal(200);
+                expect(response2_2.text).to.equal("OK");
+    
+                app1.close( () => {
+                    
+                    app2.close( () => {
+                        done();
+                    });
+
+                });
             });
 
         });

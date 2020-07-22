@@ -1,4 +1,4 @@
-import KoaD from "../index";
+import { KoaD } from "../index";
 import * as Router from "@koa/router";
 import AppCatalog from "./app-catalog";
 

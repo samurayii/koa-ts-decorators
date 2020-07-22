@@ -39,6 +39,7 @@ class AppCatalog implements IAppCatalog {
     }
 
     existCatalog (app_id: string): boolean {
+
         if (this._catalog[app_id] === undefined) {
             return false;
         }
@@ -55,7 +56,7 @@ class AppCatalog implements IAppCatalog {
         this._catalog[app_id].controllers.reset();
         this._catalog[app_id].middleware.reset();
 
-        this._catalog = {};
+        delete this._catalog[app_id];
     }
 
 }
