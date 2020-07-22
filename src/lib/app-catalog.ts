@@ -1,11 +1,11 @@
 import { IRoutesCatalog, RoutesCatalog } from "./routes-catalog";
 import { IControllersCatalog, ControllersCatalog } from "./controllers-catalog";
-import { IServicesCatalog, ServicesCatalog } from "./services-catalog";
+import { IMiddlewareCatalog, MiddlewareCatalog } from "./middleware-catalog";
 
 type TAppRecord = {
     routes: IRoutesCatalog
     controllers: IControllersCatalog
-    services: IServicesCatalog
+    middleware: IMiddlewareCatalog
 }
 
 export interface IAppCatalog {
@@ -30,7 +30,7 @@ class AppCatalog implements IAppCatalog {
             this._catalog[app_id] = {
                 routes: new RoutesCatalog(app_id),
                 controllers: new ControllersCatalog(app_id),
-                services: new ServicesCatalog(app_id)
+                middleware: new MiddlewareCatalog(app_id)
             };
         }
 
@@ -53,7 +53,7 @@ class AppCatalog implements IAppCatalog {
 
         this._catalog[app_id].routes.reset();
         this._catalog[app_id].controllers.reset();
-        this._catalog[app_id].services.reset();
+        this._catalog[app_id].middleware.reset();
 
         this._catalog = {};
     }

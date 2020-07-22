@@ -8,12 +8,25 @@ export function Middleware (app_id: string = "default"): Function {
         throw new Error("Id application must be string");
     }
 
-    return function (target: any, controller_method: string) {
+    return function (target: any, controller_method?: string) {
 
-        const controller_name = target.constructor.name;
-        const routes_catalog = AppCatalog.getCatalog(app_id).routes;
+        if (target.name === undefined && controller_method !== undefined) {
 
-        routes_catalog.add("", "use", controller_name, controller_method);
+            const controller_name = target.constructor.name;
+            const routes_catalog = AppCatalog.getCatalog(app_id).routes;
+
+            routes_catalog.add("", "use", controller_name, controller_method);
+
+        } else {
+
+            const name = target.name;
+            const constructor = target as FunctionConstructor;
+            const instance = new constructor();
+            const middleware_catalog = AppCatalog.getCatalog(app_id).middleware;
+
+            middleware_catalog.add(name, instance);
+
+        }
 
     };
 

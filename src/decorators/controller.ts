@@ -9,6 +9,10 @@ export function Controller (request_path: string = "", app_id: string = "default
         throw new Error("Id application must be string");
     }
 
+    if (typeof request_path !== "string") {
+        throw new Error("Request path must be string");
+    }
+
     return function (target: Function) {
 
         if (request_path === "") {

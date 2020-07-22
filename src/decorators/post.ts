@@ -9,6 +9,10 @@ export function Post (request_path: string = "/", app_id: string = "default"): F
         throw new Error("Id application must be string");
     }
 
+    if (typeof request_path !== "string") {
+        throw new Error("Request path must be string");
+    }
+
     request_path = getRequestPath(request_path);
 
     return function (target: any, controller_method: string) {

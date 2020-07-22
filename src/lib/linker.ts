@@ -13,8 +13,13 @@ export default function Linking (app: KoaD): void {
     const catalog = AppCatalog.getCatalog(app_id);
     const routes = catalog.routes;
     const controllers = catalog.controllers;
-    const services = catalog.services;
     const prefix = app.prefix.replace(/(^\/|\/$)/gi, "");
+
+    const middleware_catalog = catalog.middleware;
+
+    for (const middleware of middleware_catalog.catalog) {
+        app.use(middleware.instance.use(app.config));
+    }
 
     for (const controller of controllers.catalog) {
 
@@ -32,14 +37,6 @@ export default function Linking (app: KoaD): void {
 
         if (full_prefix !== "/" && full_prefix !== "") {
             router.prefix(full_prefix);
-        }
-
-        for (const service of services.catalog) {
-
-            if (controller.name === service.controller_name) {
-                router.use(service.instance);
-            }
-
         }
 
         for (const route of routes.catalog) {

@@ -9,7 +9,6 @@ export * from "./decorators/post";
 export * from "./decorators/put";
 export * from "./decorators/delete";
 export * from "./decorators/middleware";
-export * from "./decorators/service";
 export * from "./decorators/controller";
 
 export { Context, Next } from "koa";
@@ -29,6 +28,7 @@ export interface IKoaD {
     readonly id: string
     readonly server: Server
     readonly prefix: string
+    readonly config: IKoaDConfig
     close: (callback?: (err?: Error) => void) => Server
     listen(
         port?: number,
@@ -114,6 +114,10 @@ export default class KoaD extends Koa implements IKoaD {
         return this._config.prefix;
     }
 
+    get config (): IKoaDConfig {
+        return this._config;
+    }
+
     listen(...args: any[]): Server {
 
         if (this._config.enable === false) {
@@ -168,4 +172,8 @@ export default class KoaD extends Koa implements IKoaD {
         return this._server.close(callback);
     }
 
+}
+
+export interface IMiddleware {
+    use: (config: IKoaDConfig) => unknown
 }

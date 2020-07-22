@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import KoaD, { Get, Controller, Middleware, Post, Service, Context, Next } from "../src/index";
-import * as Koa from "koa";
+import KoaD, { Get, Controller, Middleware, Post, Context, Next, IMiddleware, IKoaDConfig } from "../src/index";
 import * as superagent from "superagent";
 import { expect } from "chai";
 import * as helmet from "koa-helmet";
+import * as koa_logger from "koa-logger";
 
 describe("KoaD", function () {
 
@@ -189,7 +189,7 @@ describe("KoaD", function () {
 
     });
 
-    it("@Get, @Post @Controller, @Middleware, @Service (2 controller)", function(done) {
+    it("@Get, @Post @Controller, @Middleware (2 controller)", function(done) {
 
         this.timeout(5000);
         this.slow(5000);
@@ -238,7 +238,6 @@ describe("KoaD", function () {
             }
         }
 
-        @Service("helmet", helmet())
         @Controller()
         class User {
 
@@ -294,6 +293,73 @@ describe("KoaD", function () {
 
             expect(response6.status).to.equal(200);
             expect(response6.text).to.equal("OK");
+
+            app.close( () => {
+                done();
+            });
+
+        });
+
+    });
+
+    it("@Middleware class", function(done) {
+
+        this.timeout(5000);
+        this.slow(5000);
+
+        const config = {
+            listening: "*:3001",
+            enable: true,
+            prefix: "/",
+            proxy: false,
+            subdomain_offset: 2,
+            proxy_header: "X-Forwarded-For",
+            ips_count: 0,
+            parsing: {
+                enable: false,
+                types: ["json"],
+                encoding: "utf-8",
+                form_limit: "56kb",
+                json_limit: "1mb",
+                text_limit: "1mb",
+                strict: true
+            }   
+        };
+
+        @Controller()
+        class Healthcheck {
+
+            @Get()
+            get (ctx: Context): void {
+                ctx.body = "OK";
+                ctx.status = 200;
+            }
+        }
+
+        @Middleware()
+        class Logger implements IMiddleware {
+            use (config: IKoaDConfig): unknown {
+                return koa_logger( (str: string) => {
+                    //console.log(str);
+                });
+            }
+        }
+
+        @Middleware()
+        class Helmet implements IMiddleware {
+            use (): unknown {
+                return helmet();
+            }
+        }
+
+        const app = new KoaD(config);
+
+        app.listen(config.listening, async () => {
+
+            const response1 = await superagent.get("http://localhost:3001/healthcheck");
+
+            expect(response1.status).to.equal(200);
+            expect(response1.text).to.equal("OK");
 
             app.close( () => {
                 done();
