@@ -3,14 +3,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type TMiddlewareRecord = {
     name: string
-    instance: any
+    constructor: any
 }
 
 export interface IMiddlewareCatalog {
     readonly catalog: TMiddlewareRecord[]
     add: (
         name: string,
-        instance: any
+        constructor: any
     ) => void
     reset: () => void
 }
@@ -29,7 +29,7 @@ export class MiddlewareCatalog implements IMiddlewareCatalog {
 
     add (
         name: string,
-        instance: any
+        constructor: any
     ): void {
 
         for (const record of this._catalog) {
@@ -40,7 +40,7 @@ export class MiddlewareCatalog implements IMiddlewareCatalog {
 
         this._catalog.push({
             name: name,
-            instance: instance
+            constructor: constructor
         });
 
     }

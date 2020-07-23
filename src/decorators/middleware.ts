@@ -21,10 +21,9 @@ export function Middleware (app_id: string = "default"): Function {
 
             const name = target.name;
             const constructor = target as FunctionConstructor;
-            const instance = new constructor();
             const middleware_catalog = AppCatalog.getCatalog(app_id).middleware;
 
-            middleware_catalog.add(name, instance);
+            middleware_catalog.add(name, constructor);
 
         }
 
