@@ -44,6 +44,10 @@ export default function Linking (app: KoaD): void {
 
             if (controller.name === route.controller_name) {
 
+                if (controller.instance === undefined) {
+                    controller.instance = new controller.constructor();
+                }
+
                 switch (route.method) {
                     case "get": {
                         router.get(route.path, controller.instance[route.fn_name].bind(controller.instance));

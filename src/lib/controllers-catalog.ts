@@ -3,7 +3,8 @@
 type TControllerRecord = {
     name: string
     path: string
-    instance: any
+    constructor: any
+    instance?: any
 }
 
 export interface IControllersCatalog {
@@ -45,7 +46,7 @@ export class ControllersCatalog implements IControllersCatalog {
         this._catalog.push({
             name: name,
             path: path,
-            instance: new constructor()
+            constructor: constructor
         });
 
     }
