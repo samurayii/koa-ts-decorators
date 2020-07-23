@@ -353,6 +353,13 @@ describe("KoaD", function () {
             }
         }
 
+        @Middleware()
+        class Void implements IMiddleware {
+            use (): unknown {
+                return;
+            }
+        }
+
         const app = new KoaD(config);
 
         app.listen( async () => {

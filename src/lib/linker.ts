@@ -19,7 +19,11 @@ export default function Linking (app: KoaD): void {
 
     for (const middleware of middleware_catalog.catalog) {
         const instance = new middleware.constructor();
-        app.use(instance.use(app.config));
+        const fn = instance.use(app.config);
+        if (fn) {
+            app.use(fn);
+        }
+        
     }
 
     for (const controller of controllers.catalog) {
