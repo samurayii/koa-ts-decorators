@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IKoaDConfig {
     listening?: string,
     keys?: string[]
@@ -8,4 +9,5 @@ export interface IKoaDConfig {
     subdomain_offset?: number
     proxy_header?: string
     ips_count?: number
+    [key: string]: any
 }
