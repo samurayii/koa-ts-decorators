@@ -42,6 +42,9 @@ class Healthcheck {
     @Post()             // route POST /
     @Post("/hello")     // route POST /hello
     get (ctx: Context): void {
+
+        console.log(ctx.koad.config);
+
         if (ctx.state.flag === true) {
             ctx.body = "OK";
             ctx.status = 200;
@@ -122,6 +125,9 @@ class Healthcheck {
     })
     @Get("/hello", "second")
     get (ctx: Context): void {
+
+        console.log(ctx.koad.config);
+
         if (ctx.state.flag === true) {
             ctx.body = "OK";
             ctx.status = 200;

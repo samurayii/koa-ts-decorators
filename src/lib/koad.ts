@@ -42,6 +42,10 @@ export class KoaD extends Koa implements IKoaD {
             this.keys = this._config.keys;
         }
 
+        this.context.koad = {
+            config: this._config
+        };
+
         this._server = createServer(super.callback());
 
     }

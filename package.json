@@ -1,6 +1,6 @@
 {
     "name": "koa-ts-decorators",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Decorators for koa",
     "main": "index.js",
     "scripts": {
@@ -28,7 +28,7 @@
     },
     "homepage": "https://github.com/samurayii/koa-ts-decorators.git#readme",
     "devDependencies": {
-        "@types/chai": "^4.2.11",
+        "@types/chai": "^4.2.12",
         "@types/chalk": "^2.2.0",
         "@types/find-package-json": "^1.1.1",
         "@types/koa": "^2.11.3",
@@ -36,10 +36,10 @@
         "@types/koa-logger": "^3.1.1",
         "@types/koa__router": "^8.0.2",
         "@types/mocha": "^8.0.0",
-        "@types/node": "^14.0.24",
+        "@types/node": "^14.0.26",
         "@types/superagent": "^4.1.8",
-        "@typescript-eslint/eslint-plugin": "^3.7.0",
-        "@typescript-eslint/parser": "^3.7.0",
+        "@typescript-eslint/eslint-plugin": "^3.7.1",
+        "@typescript-eslint/parser": "^3.7.1",
         "chai": "^4.2.0",
         "eslint": "^7.5.0",
         "json-key-remover": "^0.0.2",

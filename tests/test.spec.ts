@@ -128,6 +128,7 @@ describe("KoaD", function () {
             @Post()
             @Post("/hello")
             get (ctx: Context): void {
+
                 if (ctx.state.flag === true) {
                     ctx.body = "OK";
                     ctx.status = 200;
