@@ -2,8 +2,7 @@
 import * as Koa from "koa";
 import { Server, createServer } from "http";
 import Linking from "./linker";
-import { IKoaD } from "../interfaces/koad";
-import { IKoaDConfig } from "../interfaces/koad-config";
+import { IKoaDConfig, IKoaD } from "../interfaces";
 
 export class KoaD extends Koa implements IKoaD {
 

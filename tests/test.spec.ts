@@ -36,6 +36,12 @@ describe("KoaD", function () {
         @Controller("/")
         class Healthcheck {
 
+            constructor (app_id: string, controller_name: string, prefix: string) {
+                //console.log(app_id);
+                //console.log(controller_name);
+                //console.log(prefix);
+            }
+
             @Middleware()
             middle (ctx: Context, next: Next) {
                 ctx.state.flag = true;
@@ -340,6 +346,12 @@ describe("KoaD", function () {
 
         @Middleware()
         class Logger implements IMiddleware {
+
+            constructor (app_id: string, middleware_name: string) {
+                //console.log(app_id);
+                //console.log(middleware_name);
+            }
+
             use (config: IKoaDConfig): unknown {
                 return koa_logger( (str: string) => {
                     //console.log(str);

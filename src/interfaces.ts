@@ -1,8 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ListenOptions } from "net";
 import { Server } from "http";
-import { IKoaDConfig } from "./koad-config";
+
+export interface IKoaDConfig {
+    listening?: string,
+    keys?: string[]
+    env?: string
+    proxy?: boolean
+    prefix?: string
+    enable?: boolean
+    subdomain_offset?: number
+    proxy_header?: string
+    ips_count?: number
+    [key: string]: any
+}
+
+export interface IMiddleware {
+    use: (config: IKoaDConfig) => unknown | void
+}
 
 export interface IKoaD {
     readonly id: string

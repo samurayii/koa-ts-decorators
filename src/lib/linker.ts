@@ -18,7 +18,7 @@ export default function Linking (app: KoaD): void {
     const middleware_catalog = catalog.middleware;
 
     for (const middleware of middleware_catalog.catalog) {
-        const instance = new middleware.constructor();
+        const instance = new middleware.constructor(app_id, middleware.constructor.name);
         const fn = instance.use(app.config);
         if (fn) {
             app.use(fn);
@@ -49,7 +49,7 @@ export default function Linking (app: KoaD): void {
             if (controller.name === route.controller_name) {
 
                 if (controller.instance === undefined) {
-                    controller.instance = new controller.constructor();
+                    controller.instance = new controller.constructor(app_id, controller.name, full_prefix);
                 }
 
                 switch (route.method) {
